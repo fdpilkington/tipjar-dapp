@@ -2,7 +2,7 @@
   <div>
     <div class="field has-addons has-addons-centered">
       <p class="control is-expanded has-icons-left">
-        <input class="input is-fullwidth" v-model="fiatInput" type="text" placeholder="0.00" maxlength="9" id="input-fiat">
+        <input class="input is-fullwidth" v-model="fiatInput"  @click="errorFiatInputReset()" type="text" placeholder="0.00" maxlength="9" id="fiat-input">
         <span class="icon is-small is-left">$</span>
       </p>
       <p class="control">
@@ -31,6 +31,7 @@
 <script>
 import axios from 'axios';
 import { keccak256 } from 'js-sha3';
+import srs from 'secure-random-string';
 
 export default {
   props: ['contract'],
@@ -39,7 +40,7 @@ export default {
       fiatInput: null,
       ethPriceUsd: null,
       ethAmount: null,
-      generatedLink: null
+      generatedLink: null,
     }
   },
   computed: {
@@ -65,17 +66,27 @@ export default {
       }
     },
     contractSend() {
-      var id = Math.random().toString(36).substring(2, 15);
-      this.generatedLink = "tipjar.link/claim?" + id;
-      var hash = "0x" + keccak256(id);
-      var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
-      this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
+      if (this.fiatInput != null && !isNaN(this.fiatInput)) {
+        var id = srs({length: 16});
+        this.generatedLink = "tipjar.link/claim?" + id;
+        var hash = "0x" + keccak256(id);
+        var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
+        this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
+      } else {
+        this.errorFiatInput();
+      }
     },
     copyGeneratedLink() {
       var copyLink = document.getElementById("get-link");
       copyLink.select();
       copyLink.setSelectionRange(0, 99999);
       document.execCommand("copy");
+    },
+    errorFiatInput() {
+      document.getElementById("fiat-input").classList.add("is-danger");
+    },
+    errorFiatInputReset() {
+      document.getElementById("fiat-input").classList.remove("is-danger");
     }
   },
   mounted() {

@@ -131,7 +131,7 @@ export default {
 }
 
 #view {
-  max-width: 24rem;
+  max-width: 26rem;
   margin: 0 auto;
 }
 

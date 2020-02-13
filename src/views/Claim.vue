@@ -29,7 +29,14 @@ export default {
       }
     },
     contractClaim() {
-      this.$parent.contract.methods.claim(this.id).send({from: window.web3.givenProvider.selectedAddress});
+      if (this.id !== "Got a TipJar link? Paste it in your browser.") {
+        this.$parent.contract.methods.claim(this.id).call({from: window.web3.givenProvider.selectedAddress});
+      } else {
+        this.errorFillId();
+      }
+    },
+    errorFillId() {
+      document.getElementById("fill-id").classList.add("is-danger");
     }
   },
   mounted() {
