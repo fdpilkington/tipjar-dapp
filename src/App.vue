@@ -1,11 +1,15 @@
 <template>
-  <div id="app">
-    <p id="header-name">💸 TipJar</p>
-    <p id="header-connect-button">
-      <button class="button is-primary is-rounded" v-bind:class="styleConnectButton" v-on:click="connectMetaMask">
+<div id="root">
+  <div id="header-container">
+    <div id="header-content">
+      <a id="header-title" class="has-text-primary is-size-5">💸 TipJar</a>
+      <button id="header-button" class="button is-primary is-rounded" v-bind:class="styleConnectButton" v-on:click="connectMetaMask">
         {{connectMessage}}
       </button>
-    </p>
+    </div>
+  </div>
+
+  <div id="body-container">
     <div id="nav">
       <div class="field has-addons has-addons-centered">
         <p class="control">
@@ -13,19 +17,25 @@
             <span>Give</span>
           </button>
         </p>
-        <p class="control">
+         <p class="control">
           <button class="button is-rounded" @click="$router.push('claim')">
             <span>Claim</span>
           </button>
         </p>
       </div>
+      <div id="view">
+        <router-view/>
+      </div>
     </div>
-    <div id="view">
-      <router-view/>
-    </div>
-    <a class ="footer-link" id="footer-github-link" href="https://github.com/fdpilkington/tipjar">GitHub</a>
-    <a class ="footer-link" id="footer-about-link" href="https://github.com/fdpilkington/tipjar-dapp#what-is-this">What is this?</a>
   </div>
+
+  <div id="footer-container">
+    <div id="footer-content">
+      <a id="footer-github" class="has-text-primary">GitHub</a>
+      <a id="footer-about" class="has-text-primary">What is this?</a>
+    </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -90,8 +100,10 @@ export default {
   },
   mounted() {
     if (!window.ethereum) {
-      this.connectMessage = "Install MetaMask";
-    }
+        this.connectMessage = "Install MetaMask";
+      } else {
+        this.connectMessage = "Connect to MetaMask";
+      }
     window.web3 = new Web3(window.web3.currentProvider);
     window.web3.eth.getAccounts().then(accounts => {
       if (accounts.length == 0) {
@@ -107,60 +119,50 @@ export default {
 </script>
 
 <style scoped>
-#app {
+#root {
+  position: relative;
+  min-height: 100vh;
+}
+
+#header-container {
+  background-color: white;
+  width: 100%;
+  display: flex; height: 100%; flex-direction: column;
+}
+
+#header-content {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+#header-button {
+  margin-left: auto;
+}
+
+#body-container {
   text-align: center;
+  max-width: 26rem;
+  padding-top: 10vh;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+	margin: 0 auto;
+}
+
+#footer-container {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  
+}
+
+#footer-content {
   padding: 1.5rem;
 }
 
-#header-name {
-  margin-left: 1.5rem;
-  margin-top: .90rem;
-  left: 0;
-  position: fixed;
-  transform: translateY(-50%);
-  color: hsl(171, 100%, 41%);
-  font-size: 120%;
-}
-
-#header-connect-button {
-  margin-right: 1.5rem;
-  margin-top: .90rem;
-  right: 0;
-  position: fixed;
-  transform: translateY(-50%);
-}
-
-#nav {
-  margin-top: 12%;
-  margin-bottom: .75rem;
-}
-
-#view {
-  max-width: 26rem;
-  margin: 0 auto;
-}
-
-#footer-github-link {
-  margin-left: 1.5rem;
-  margin-bottom: .90rem;
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  color: hsl(171, 100%, 41%);
-  font-size: 90%;
-}
-
-#footer-about-link {
-  margin-right: 1.5rem;
-  margin-bottom: .90rem;
-  bottom: 0;
-  right: 0;
-  position: fixed;
-  color: hsl(171, 100%, 41%);
-  font-size: 90%;
-}
-
-.footer-link:hover {
-  text-decoration: underline;
+#footer-about {
+  float: right;
 }
 </style>

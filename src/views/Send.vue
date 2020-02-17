@@ -1,31 +1,30 @@
 <template>
-  <div>
-    <div class="field has-addons has-addons-centered">
-      <p class="control is-expanded has-icons-left">
-        <input class="input is-fullwidth" v-model="fiatInput"  @click="errorFiatInputReset()" type="text" placeholder="0.00" maxlength="9" id="fiat-input">
-        <span class="icon is-small is-left">$</span>
-      </p>
-      <p class="control">
-        <a class="button is-static" id="eth-price-button">
-          <span id="eth-price-value">≈ {{convertedToEth}} ETH</span>
-        </a>
-      </p>
-    </div>
-    <div class="field has-addons has-addons-centered">
-      <p class="control is-expanded">
-        <input class="input is-fullwidth" type="text" :value="generatedLink" id="get-link" readonly>
-      </p>
-      <p class="control">
-        <a class="button is-primary is-outlined" id="get-link-button" v-on:click="copyGeneratedLink">
-          <span>Copy</span>
-        </a>
-      </p>
-    </div>
-    <div>
-      <button class="button is-primary is-rounded" id="send-tip-button" v-on:click="contractSend">Generate Link</button>
-    </div>
+<div>
+  <div class="field has-addons has-addons-centered">
+    <p class="control is-expanded has-icons-left">
+      <input class="input is-fullwidth" v-model="fiatInput"  @click="errorFiatInputReset()" type="text" placeholder="0.00" maxlength="9" id="fiat-input">
+      <span class="icon is-small is-left">$</span>
+    </p>
+    <p class="control">
+      <a class="button is-static" id="eth-price-button">
+        <span id="eth-price-value">≈ {{convertedToEth}} ETH</span>
+      </a>
+    </p>
   </div>
-  
+  <div class="field has-addons has-addons-centered">
+    <p class="control is-expanded">
+      <input class="input is-fullwidth" type="text" :value="generatedLink" id="get-link" readonly>
+    </p>
+    <p class="control">
+      <a class="button is-primary is-outlined" id="get-link-button" v-on:click="copyGeneratedLink">
+        <span>Copy</span>
+      </a>
+    </p>
+  </div>
+  <div>
+    <button class="button is-primary is-rounded" id="send-tip-button" v-on:click="contractSend">Generate Link</button>
+  </div>
+</div>
 </template>
 
 <script>
@@ -68,7 +67,7 @@ export default {
     contractSend() {
       if (this.fiatInput && !isNaN(this.fiatInput)) {
         var id = srs({length: 16});
-        this.generatedLink = "tipjar.link/claim?" + id;
+        this.generatedLink = "tipjar.link/?" + id;
         var hash = "0x" + keccak256(id);
         var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
         this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
