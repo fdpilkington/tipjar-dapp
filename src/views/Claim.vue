@@ -22,7 +22,7 @@ export default {
   methods: {
     queryUrl() {
       var id = window.location.href.slice(window.location.href.indexOf('?') + 1);
-      if (id == "http://localhost:8080/claim") {
+      if (id == "https://tipjar.link/claim" || id == "http://localhost:8080/claim") {
         return "Got a TipJar link? Paste it in your browser.";
       } else {
         return id;

@@ -66,7 +66,7 @@ export default {
       }
     },
     contractSend() {
-      if (this.fiatInput != null && !isNaN(this.fiatInput)) {
+      if (this.fiatInput && !isNaN(this.fiatInput)) {
         var id = srs({length: 16});
         this.generatedLink = "tipjar.link/claim?" + id;
         var hash = "0x" + keccak256(id);

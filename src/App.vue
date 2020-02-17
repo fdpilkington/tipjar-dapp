@@ -24,7 +24,7 @@
       <router-view/>
     </div>
     <a class ="footer-link" id="footer-github-link" href="https://github.com/fdpilkington/tipjar">GitHub</a>
-    <p class ="footer-link" id="footer-about-link">What is this?</p>
+    <a class ="footer-link" id="footer-about-link" href="https://github.com/fdpilkington/tipjar-dapp#what-is-this">What is this?</a>
   </div>
 </template>
 
@@ -34,6 +34,7 @@ import Web3 from 'web3';
 export default {
   data() {
     return {
+      connectedToMetaMask: false,
       connectMessage: null,
       contract: null
     }
@@ -41,17 +42,17 @@ export default {
   computed: {
     styleConnectButton() {
       return {
-        'is-outlined': this.connectMessage == "Connect to MetaMask",
-        'is-light': this.connectMessage !== "Connect to MetaMask"
+        'is-outlined': !this.connectedToMetaMask,
+        'is-light': this.connectedToMetaMask
       }
     }
   },
   methods: {
     connectMetaMask() {
       if (window.ethereum) {
-        window.ethereum.enable().then(accounts => { this.connectMessage = accounts[0].substring(0, 12)+"..." })
+        window.ethereum.enable().then(accounts => { this.connectMessage = accounts[0].substring(0, 12)+"..."; this.connectedToMetaMask = true; })
       } else {
-        alert("You must have MetaMask installed.");
+        window.location.href = "https://metamask.io"
       }
     },
     getContract() {
@@ -88,12 +89,16 @@ export default {
     }
   },
   mounted() {
+    if (!window.ethereum) {
+      this.connectMessage = "Install MetaMask";
+    }
     window.web3 = new Web3(window.web3.currentProvider);
     window.web3.eth.getAccounts().then(accounts => {
       if (accounts.length == 0) {
         this.connectMessage = "Connect to MetaMask";
       } else {
         this.connectMessage = accounts[0].toLowerCase().substring(0, 12)+"...";
+        this.connectedToMetaMask = true;
       }
     });
     this.contract = this.getContract();
