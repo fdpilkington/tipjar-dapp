@@ -2,13 +2,12 @@
 <div id="root">
   <div id="header-container">
     <div id="header-content">
-      <a id="header-title" class="has-text-primary is-size-5">💸 TipJar</a>
+      <a id="header-title" class="has-text-primary is-size-5" href="https://tipjar.link">💸 TipJar</a>
       <button id="header-button" class="button is-primary is-rounded" v-bind:class="styleConnectButton" v-on:click="connectMetaMask">
         {{connectMessage}}
       </button>
     </div>
   </div>
-
   <div id="body-container">
     <div id="nav">
       <div class="field has-addons has-addons-centered">
@@ -28,11 +27,10 @@
       </div>
     </div>
   </div>
-
   <div id="footer-container">
     <div id="footer-content">
-      <a id="footer-github" class="has-text-primary">GitHub</a>
-      <a id="footer-about" class="has-text-primary">What is this?</a>
+      <a id="footer-github" class="has-text-primary" href="https://github.com/fdpilkington/tipjar-dapp">GitHub</a>
+      <a id="footer-about" class="has-text-primary" href="https://github.com/fdpilkington/tipjar-dapp#what-is-this">What is this?</a>
     </div>
   </div>
 </div>
