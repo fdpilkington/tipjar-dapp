@@ -63,7 +63,7 @@ export default {
       this.currentTab = tab;
     },
     queryUrl() {
-      var id = window.location.href.slice(window.location.href.indexOf('?') + 1);
+      var id = document.URL.slice(document.URL.indexOf('?') + 1);
       if (id == "https://tipjar.link/" || id == "http://localhost:8080/") {
         return "Got a TipJar link? Paste it in your browser.";
       } else {
@@ -108,9 +108,13 @@ export default {
           "stateMutability": "payable",
           "type": "function"
         }], '0x10e8e03B97ebA42007C7AF80F1B723b954F7b550');
-    }
+    },
   },
   mounted() {
+    this.idFromUrl = this.queryUrl();
+    if (this.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
+      this.changeTab("claimTab");
+    }
     if (!window.ethereum) {
         this.connectMessage = "Install MetaMask";
       } else {
@@ -126,10 +130,6 @@ export default {
       }
     });
     this.contract = this.getContract();
-    this.idFromUrl = this.queryUrl();
-    if (this.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
-      this.changeTab("claimTab");
-    }
   }
 }
 </script>
