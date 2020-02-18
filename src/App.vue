@@ -9,23 +9,12 @@
     </div>
   </div>
   <div id="body-container">
-    <div id="nav">
-      <div class="field has-addons has-addons-centered">
-        <p class="control">
-          <button class="button is-rounded" @click="$router.push('send')">
-            <span>Give</span>
-          </button>
-        </p>
-         <p class="control">
-          <button class="button is-rounded" @click="$router.push('claim')">
-            <span>Claim</span>
-          </button>
-        </p>
-      </div>
-      <div id="view">
-        <router-view/>
-      </div>
+    <div class="field has-addons has-addons-centered">
+      <p class="control" v-for="tab in tabButtons" :key="tab.label">
+        <button class="button is-rounded" @click="changeTab(tab)">{{tab.label}}</button>
+      </p>
     </div>
+    <component :is="currentTab"/>
   </div>
   <div id="footer-container">
     <div id="footer-content">
@@ -37,17 +26,31 @@
 </template>
 
 <script>
-import Web3 from 'web3';
+import Web3 from "web3";
+
+import SendTab from "./components/SendTab.vue";
+import ClaimTab from "./components/ClaimTab.vue";
 
 export default {
+  components: {
+    SendTab,
+    ClaimTab
+  },
   data() {
     return {
+      currentTab: SendTab,
       connectedToMetaMask: false,
       connectMessage: null,
-      contract: null
+      contract: null,
+      idFromUrl: null
     }
   },
   computed: {
+    tabButtons() {
+      return Object
+        .values(this.$options.components)
+        .filter(tab => Object.prototype.hasOwnProperty.call(tab, "label"));
+    },
     styleConnectButton() {
       return {
         'is-outlined': !this.connectedToMetaMask,
@@ -56,6 +59,17 @@ export default {
     }
   },
   methods: {
+    changeTab(tab) {
+      this.currentTab = tab;
+    },
+    queryUrl() {
+      var id = window.location.href.slice(window.location.href.indexOf('?') + 1);
+      if (id == "https://tipjar.link/" || id == "http://localhost:8080/") {
+        return "Got a TipJar link? Paste it in your browser.";
+      } else {
+        return id;
+      }
+    },
     connectMetaMask() {
       if (window.ethereum) {
         window.ethereum.enable().then(accounts => { this.connectMessage = accounts[0].substring(0, 12)+"..."; this.connectedToMetaMask = true; })
@@ -112,6 +126,10 @@ export default {
       }
     });
     this.contract = this.getContract();
+    this.idFromUrl = this.queryUrl();
+    if (this.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
+      this.changeTab("claimTab");
+    }
   }
 }
 </script>
@@ -140,7 +158,7 @@ export default {
 
 #body-container {
   text-align: center;
-  max-width: 26rem;
+  max-width: 28rem;
   padding-top: 10vh;
   padding-left: 1.5rem;
   padding-right: 1.5rem;

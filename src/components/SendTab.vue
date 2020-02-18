@@ -33,6 +33,7 @@ import { keccak256 } from 'js-sha3';
 import srs from 'secure-random-string';
 
 export default {
+  label: "Send",
   props: ['contract'],
   data() {
     return {

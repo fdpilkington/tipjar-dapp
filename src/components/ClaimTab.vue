@@ -14,23 +14,17 @@
 <script>
 
 export default {
+  label: "Claim",
+  props: ['idFromUrl'],
   data() {
     return {
       id: null
     }
   },
   methods: {
-    queryUrl() {
-      var id = window.location.href.slice(window.location.href.indexOf('?') + 1);
-      if (id == "https://tipjar.link/claim" || id == "http://localhost:8080/claim") {
-        return "Got a TipJar link? Paste it in your browser.";
-      } else {
-        return id;
-      }
-    },
     contractClaim() {
-      if (this.id !== "Got a TipJar link? Paste it in your browser.") {
-        this.$parent.contract.methods.claim(this.id).call({from: window.web3.givenProvider.selectedAddress});
+      if (this.$parent.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
+        this.$parent.contract.methods.claim(this.$parent.idFromUrl).call({from: window.web3.givenProvider.selectedAddress});
       } else {
         this.errorFillId();
       }
@@ -40,7 +34,7 @@ export default {
     }
   },
   mounted() {
-    this.id = this.queryUrl();
+    this.id = this.$parent.idFromUrl;
   }
 }
 </script>
