@@ -12,6 +12,7 @@
 </template>
 
 <script>
+const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
 
 export default {
   label: "Claim",
@@ -23,7 +24,7 @@ export default {
   },
   methods: {
     contractClaim() {
-      if (this.$parent.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
+      if (this.$parent.idFromUrl != defaultIdFromUrl) {
         this.$parent.contract.methods.claim(this.$parent.idFromUrl).call({from: window.web3.givenProvider.selectedAddress});
       } else {
         this.errorFillId();

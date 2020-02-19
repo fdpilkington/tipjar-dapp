@@ -31,6 +31,8 @@ import Web3 from "web3";
 import SendTab from "./components/SendTab.vue";
 import ClaimTab from "./components/ClaimTab.vue";
 
+const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
+
 export default {
   components: {
     SendTab,
@@ -40,7 +42,7 @@ export default {
     return {
       currentTab: SendTab,
       connectedToMetaMask: false,
-      connectMessage: null,
+      connectMessage: "Install MetaMask",
       contract: null,
       idFromUrl: null
     }
@@ -65,7 +67,7 @@ export default {
     queryUrl() {
       var id = document.URL.slice(document.URL.indexOf('?') + 1);
       if (id == "https://tipjar.link/" || id == "http://localhost:8080/") {
-        return "Got a TipJar link? Paste it in your browser.";
+        return defaultIdFromUrl;
       } else {
         return id;
       }
@@ -112,14 +114,12 @@ export default {
   },
   mounted() {
     this.idFromUrl = this.queryUrl();
-    if (this.idFromUrl != "Got a TipJar link? Paste it in your browser.") {
+    if (this.idFromUrl != defaultIdFromUrl) {
       this.changeTab("claimTab");
     }
-    if (!window.ethereum) {
-        this.connectMessage = "Install MetaMask";
-      } else {
-        this.connectMessage = "Connect to MetaMask";
-      }
+    if (window.ethereum) {
+      this.connectMessage = "Connect to MetaMask";
+    }
     window.web3 = new Web3(window.web3.currentProvider);
     window.web3.eth.getAccounts().then(accounts => {
       if (accounts.length == 0) {
