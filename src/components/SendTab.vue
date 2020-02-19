@@ -24,6 +24,7 @@
   <div>
     <button class="button is-primary is-rounded" id="send-tip-button" v-on:click="contractSend">Generate Link</button>
   </div>
+  <component :is="displayMessage"/>
 </div>
 </template>
 
@@ -32,18 +33,23 @@ import axios from 'axios';
 import { keccak256 } from 'js-sha3';
 import srs from 'secure-random-string';
 
+import MetaMaskMessage from "./MetaMaskMessage.vue";
+
 const defaultGeneratedLink = "Your link will appear here.";
 
 export default {
   label: "Send",
-  props: ['contract'],
+  components: {
+    MetaMaskMessage
+  },
   data() {
     return {
       fiatInput: null,
       ethPriceUsd: null,
       ethAmount: null,
       generatedLink: defaultGeneratedLink,
-      isCopied: "Copy"
+      isCopied: "Copy",
+      displayMessage: null
     }
   },
   computed: {
@@ -69,16 +75,20 @@ export default {
       }
     },
     contractSend() {
-      if (this.generatedLink == defaultGeneratedLink) {
-        if (this.fiatInput && !isNaN(this.fiatInput)) {
-          var id = srs({length: 16});
-          this.generatedLink = "tipjar.link/?" + id;
-          var hash = "0x" + keccak256(id);
-          var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
-          this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
-        } else {
-          this.errorFiatInput();
+      if (this.$parent.connectedToMetaMask) {
+        if (this.generatedLink == defaultGeneratedLink) {
+          if (this.fiatInput && !isNaN(this.fiatInput)) {
+            var id = srs({length: 16});
+            this.generatedLink = "tipjar.link/?" + id;
+            var hash = "0x" + keccak256(id);
+            var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
+            this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
+          } else {
+            this.errorFiatInput();
+          }
         }
+      } else {
+        this.displayMessage = MetaMaskMessage;
       }
     },
     copyGeneratedLink() {

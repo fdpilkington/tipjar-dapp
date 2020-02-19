@@ -6,26 +6,36 @@
       </p>
     </div>
     <div>
-      <button class="button is-primary is-rounded" id="claim-tip-button" v-on:click="contractClaim">Claim Tip</button> 
+      <button class="button is-primary is-rounded" id="claim-tip-button" @click="contractClaim">Claim Tip</button> 
     </div>
+    <component :is="displayMessage"/>
   </div>
 </template>
 
 <script>
+import MetaMaskMessage from "./MetaMaskMessage.vue";
+
 const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
 
 export default {
   label: "Claim",
-  props: ['idFromUrl'],
+  components: {
+    MetaMaskMessage
+  },
   data() {
     return {
-      id: null
+      id: null,
+      displayMessage: null
     }
   },
   methods: {
     contractClaim() {
       if (this.$parent.idFromUrl != defaultIdFromUrl) {
-        this.$parent.contract.methods.claim(this.$parent.idFromUrl).call({from: window.web3.givenProvider.selectedAddress});
+        if (this.$parent.connectedToMetaMask) {
+          this.$parent.contract.methods.claim(this.$parent.idFromUrl).call({from: window.web3.givenProvider.selectedAddress});
+        } else {
+          this.displayMessage = MetaMaskMessage;
+        }
       } else {
         this.errorFillId();
       }
