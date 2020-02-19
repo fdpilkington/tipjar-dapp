@@ -1,7 +1,8 @@
 <template>
 <div class="notification is-danger is-light">
   <button class="delete" @click=deleteMessage()></button>
-  <strong>You must be connected to MetaMask.</strong> Press the button in the top right corner!
+  <strong>You must be connected to MetaMask.</strong>
+  <br/>Press the button in the top right corner!
 </div>
 </template>
 
