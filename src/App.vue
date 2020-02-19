@@ -32,6 +32,8 @@ import SendTab from "./components/SendTab.vue";
 import ClaimTab from "./components/ClaimTab.vue";
 
 const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
+const publishedUrl = "https://tipjar.link/"
+const localUrl = "http://localhost:8080/"
 
 export default {
   components: {
@@ -66,7 +68,7 @@ export default {
     },
     queryUrl() {
       var id = document.URL.slice(document.URL.indexOf('?') + 1);
-      if (id == "https://tipjar.link/" || id == "http://localhost:8080/") {
+      if (id == publishedUrl || id == localUrl) {
         return defaultIdFromUrl;
       } else {
         return id;
