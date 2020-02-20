@@ -32,7 +32,7 @@ export default {
     contractClaim() {
       if (this.$parent.idFromUrl != defaultIdFromUrl) {
         if (this.$parent.connectedToMetaMask) {
-          this.$parent.contract.methods.claim(this.$parent.idFromUrl).call({from: window.web3.givenProvider.selectedAddress});
+          this.$parent.contract.methods.claim(this.$parent.idFromUrl).send({from: window.web3.givenProvider.selectedAddress});
         } else {
           this.displayMessage = MetaMaskMessage;
         }
