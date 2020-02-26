@@ -28,12 +28,15 @@
 <script>
 import Web3 from "web3";
 
+import contractJson from "../build/contracts/TipJar.json";
+
 import SendTab from "./components/SendTab.vue";
 import ClaimTab from "./components/ClaimTab.vue";
 
 const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
-const publishedUrl = "https://tipjar.link/"
-const localUrl = "http://localhost:8080/"
+const publishedUrl = "https://tipjar.link/";
+const localUrl = "http://localhost:8080/";
+const contractAddress = "0x10e8e03B97ebA42007C7AF80F1B723b954F7b550";
 
 export default {
   components: {
@@ -82,36 +85,7 @@ export default {
       }
     },
     getContract() {
-      return new window.web3.eth.Contract([{
-          "constant": false,
-          "inputs": [
-            {
-              "internalType": "string",
-              "name": "_id",
-              "type": "string"
-            }
-          ],
-          "name": "claim",
-          "outputs": [],
-          "payable": false,
-          "stateMutability": "nonpayable",
-          "type": "function"
-        },
-        {
-          "constant": false,
-          "inputs": [
-            {
-              "internalType": "bytes32",
-              "name": "_hash",
-              "type": "bytes32"
-            }
-          ],
-          "name": "send",
-          "outputs": [],
-          "payable": true,
-          "stateMutability": "payable",
-          "type": "function"
-        }], '0x10e8e03B97ebA42007C7AF80F1B723b954F7b550');
+      return new window.web3.eth.Contract(contractJson.abi, contractAddress);
     },
   },
   mounted() {

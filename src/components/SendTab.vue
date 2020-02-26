@@ -79,7 +79,7 @@ export default {
         if (this.generatedLink == defaultGeneratedLink) {
           if (this.fiatInput && !isNaN(this.fiatInput)) {
             var id = srs({length: 16});
-            this.generatedLink = "tipjar.link/?" + id;
+            this.generatedLink = document.URL + "?" + id;
             var hash = "0x" + keccak256(id);
             var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
             this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
