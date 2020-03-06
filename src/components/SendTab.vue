@@ -29,13 +29,14 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { keccak256 } from 'js-sha3';
-import srs from 'secure-random-string';
+import axios from "axios";
+import { keccak256 } from "js-sha3";
+import srs from "secure-random-string";
 
 import MetaMaskMessage from "./MetaMaskMessage.vue";
 
 const defaultGeneratedLink = "Your link will appear here.";
+
 
 export default {
   label: "Send",
@@ -82,7 +83,7 @@ export default {
             this.generatedLink = window.location.origin + "/?" + id;
             var hash = "0x" + keccak256(id);
             var amount = window.web3.utils.toWei(this.ethAmount.toString(), 'ether');
-            this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount});
+            this.$parent.contract.methods.send(hash).send({from: window.web3.givenProvider.selectedAddress, value: amount, useGSN: false});
           } else {
             this.errorFiatInput();
           }

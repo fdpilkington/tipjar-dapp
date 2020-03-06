@@ -27,6 +27,7 @@
 
 <script>
 import Web3 from "web3";
+import { GSNProvider } from "@openzeppelin/gsn-provider";
 
 import contractJson from "../build/contracts/TipJar.json";
 
@@ -36,7 +37,7 @@ import ClaimTab from "./components/ClaimTab.vue";
 const defaultIdFromUrl = "Got a TipJar link? Paste it in your browser.";
 const publishedUrl = "https://tipjar.link/";
 const localUrl = "http://localhost:8080/";
-const contractAddress = "0x10e8e03B97ebA42007C7AF80F1B723b954F7b550";
+const contractAddress = "0xf112be3B72D8023Ec0A63DC7967646D0afD4633a";
 
 export default {
   components: {
@@ -96,7 +97,7 @@ export default {
     if (window.ethereum) {
       this.connectMessage = "Connect to MetaMask";
     }
-    window.web3 = new Web3(window.web3.currentProvider);
+    window.web3 = new Web3(new GSNProvider(window.web3.currentProvider));
     window.web3.eth.getAccounts().then(accounts => {
       if (accounts.length == 0) {
         this.connectMessage = "Connect to MetaMask";
@@ -106,6 +107,7 @@ export default {
       }
     });
     this.contract = this.getContract();
+    //this.contract.methods.initialize().send({from: window.web3.givenProvider.selectedAddress, useGSN: false});
   }
 }
 </script>
